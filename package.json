@@ -1,0 +1,47 @@
+{
+  "name": "enterprise_data_manage",
+  "version": "1.0.0",
+  "description": "enterprise data manage platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "package-win": "electron-builder --win --x64",
+    "package2": "electron-packager ./ EnterpriseApp --platform=win32 --arch=x64 --icon=./logo.ico --out=./out --asar --app-version=1.0.0 --overwrite --ignore=node_modules --electron-version 9.0.0"
+  },
+  "author": "80201288@qq.com",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^9.0.0",
+    "electron-builder": "^22.6.1",
+    "electron-packager": "^14.2.1"
+  },
+  "build": {
+    "appId": "cn.com.sdcsoft",
+    "productName": "EnterpriseDataManage",
+    "copyright": "sdcsoft.com.cn",
+    "win": {
+      "icon": "logo.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "static/",
+        "to": "static/"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./logo.ico",
+      "uninstallerIcon": "./logo.ico",
+      "installerHeaderIcon": "./logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "EPS设备数据管理系统"
+    }
+  }
+}

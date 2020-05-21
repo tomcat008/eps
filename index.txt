@@ -1,0 +1,81 @@
+const electron = require('electron')
+
+let myWindow = null
+const Menu = electron.Menu
+// 隐藏菜单栏
+Menu.setApplicationMenu(null)
+//实现单例运行
+const gotTheLock = electron.app.requestSingleInstanceLock()
+if (!gotTheLock) {
+    electron.app.quit()
+} else {
+    electron.app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (myWindow) {
+            if (myWindow.isMinimized()) { myWindow.restore() }
+            myWindow.focus()
+        }
+    })
+}
+let win = null
+let flag = false
+function check() {
+    setTimeout(() => {
+        if (flag) {
+            myWindow.close()
+            win.maximize()
+            win.show()
+        }
+        else {
+            check()
+        }
+    }, 7500)
+}
+function createLogoWindow() {
+    // 创建浏览器窗口
+    myWindow = new electron.BrowserWindow({
+        width: 400,
+        height: 300,
+        icon: 'logo.ico',
+        frame: false,
+        resizable: false,
+        transparent: true,
+        show: false,
+        alwaysOnTop: true,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    myWindow.loadFile('./images/loading.gif')
+    win = new electron.BrowserWindow({
+        icon: 'logo.ico',
+        show: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    //win.loadURL('http://boiler.enterprise.sdcsoft.com.cn')
+    win.loadURL('http://www.baidu.com')
+    myWindow.once('ready-to-show', () => {
+        myWindow.show()
+        check()
+    })
+    win.once('ready-to-show', () => {
+        flag = 1
+    })
+    myWindow.on('closed', () => {
+        myWindow = null
+    })
+    win.on('closed', () => {
+        win = null
+        electron.app.quit()
+    })
+
+}
+
+electron.app.whenReady().then(createLogoWindow)
+electron.app.on('activate', () => {
+    if (myWindow === null) {
+        createLogoWindow()
+    }
+})

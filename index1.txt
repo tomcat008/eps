@@ -1,0 +1,63 @@
+const electron = require('electron')
+
+let loadingWin = null
+let mainWin = null
+
+let flag = false
+let timer = null
+function check() {
+    timer = setInterval(() => {
+        if (flag) {
+            clearInterval(timer)
+            loadingWin.close()
+            mainWin.maximize()
+            mainWin.show()
+        }
+    }, 2000);
+}
+function createLoadingWindow() {
+    // 创建浏览器窗口
+    loadingWin = new electron.BrowserWindow({
+        icon: 'logo.ico',
+        width: 400,
+        height: 300,
+        frame: false,
+        resizable: false,
+        transparent: true,
+        show: false,
+        alwaysOnTop: true,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    loadingWin.loadFile('./images/loading.gif')
+    mainWin = new electron.BrowserWindow({
+        icon: 'logo.ico',
+        show: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+    //win.loadURL('http://boiler.enterprise.sdcsoft.com.cn')
+    mainWin.loadURL('http://www.baidu.com')
+    loadingWin.once('ready-to-show', () => {
+        loadingWin.show()
+        //check()
+    })
+    // mainWin.once('ready-to-show', () => {
+    //     flag = 1
+    // })
+    loadingWin.on('closed', () => {
+        loadingWin = null
+    })
+    mainWin.on('closed', () => {
+        mainWin = null
+    })
+    electron.app.on('window-all-closed', function () {
+        if (process.platform !== 'darwin') {
+            electron.app.quit()
+        }
+      })
+}
+
+electron.app.whenReady().then(createLoadingWindow)
