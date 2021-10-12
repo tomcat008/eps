@@ -11,7 +11,7 @@
   "author": "80201288@qq.com",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^9.0.0",
+    "electron": "^11.5.0",
     "electron-builder": "^22.6.1",
     "electron-packager": "^14.2.1"
   },
